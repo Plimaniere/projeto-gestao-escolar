@@ -1,0 +1,267 @@
+Table tb_matricula {
+  id_matricula int [primary key]
+  id_aluno int
+  id_disciplina int
+  
+  status varchar
+  data_matricula date
+  turno varchar
+  nota decimal
+  pagamento int
+}
+
+Table professor {
+id_disciplina integer
+id_professor integer
+nome varchar (30)
+sobrenome varchar (50)
+cpf varchar (11)
+data_nascimento date
+email varchar (100)
+tuno int
+}
+
+Table turma {
+id_disciplina integer [primary key]
+id_professor integer
+carga_horaria varchar
+nome_disciplina varchar
+cor_turma varchar
+}
+
+Table aluno {
+  id_matricula int [primary key]
+  id_aluno int [primary key]
+  nome varchar(30)
+  sobrenome varchar(50)
+  cpf char(11)
+  data_nascimento date
+  email varchar(100)
+  doencas_cid varchar
+  raca int
+  peso varchar
+  cid_deficiencia varchar
+  id_endereco int(150)
+  telefone varchar(15)
+  sexo int
+  responsavel1 int
+  responsavel2 int
+  turno int
+}
+
+Table telefone {
+  id_telefone integer [primary key]
+  pais varchar
+  ddd int
+  numero varchar(10)
+  tipo varchar
+}
+
+Table doencas {
+doencas_cid varchar
+nome_doenca varchar(255)
+tipo_doenca varchar(100)
+especialidade_doenca varchar(50)
+}
+
+Table endereco {
+ 
+  cep integer [primary key]
+  numero int
+  complemento varchar
+}
+
+Table frequencia_alunos {
+  id_aluno int
+  id_matricula int
+  id_disciplina int
+  presença varchar(100)
+}
+
+Table tb_pagamentos {
+  id_pagamento bigint [primary key]
+  id_responsavel bigint 
+  id_matricula int 
+  data_pagamento date 
+  valor numeric(10, 2) 
+  status_pagamento varchar(20)
+}
+
+Table tb_salarios {
+  id_salario bigint [primary key]
+  id_funcionario bigint 
+  data_pagamento date
+  valor numeric(10, 2)
+}
+
+Table resposavel1 {
+ cpf_responsavel integer [primary key]
+ telefone int
+ nome int
+ sobrenome int
+ sexo int
+ cpf int
+ grau_parentesco int
+}
+
+Table responsavel2{
+  cpf_responsavel integer [primary key]
+  telefone int
+  nome int
+  sobrenome int
+  sexo int
+  cpf int
+  grau_parentesco int
+}
+
+Table sexo {
+  sexo_feminino int
+  sexo_masculino int
+}
+Table remedios {
+  id_remedio char(12)
+  cid int
+  horário_remedio datetime
+  id_aluno integer
+}
+
+table tb_ferias_funcionarios {
+  id_funcionario int
+  id_professor int
+  data_inicio date
+  data_fim date
+  data_retorno date
+  abono_ferias decimal (10,2)
+  status status_ferias_enum
+}
+
+Enum status_ferias_enum {
+  Agendado
+  Cancelado
+  Em_Andamento
+}
+
+Table Frequencia_professor{
+  id_professor integer [primary key]
+  id_diciplina int
+  presença varchar(100)
+}
+
+Table tb_frequencia_funcionarios{
+  id_funcionario integer [primary key]
+  cargo_funcionario int
+  turno_funcionario datetime
+  presença varchar(100)
+}
+
+Table tb_atestados {
+id_aluno int
+id_professor int
+id_funcionario int
+data_entrega datetime
+data_inicio date
+data_fim date
+nome_medico char
+crm_medico char
+}
+
+Table Turno{
+  Manha int
+  Tarde int
+  Integral integer
+}
+
+Table dados_funcionarios {
+ digito_de_controle int [primary key]
+ id_funcionario integer
+ nome intenger
+ cpf char(11)
+ id_endereço int(150)
+ cargo_funcionario int
+ salário int
+ turno int
+ telefone int
+ sexo int
+}
+
+Table auditoria {
+  data_criaçao date
+  ultima_atualização date
+}
+
+Table tb_alunos_pcd {
+  id_aluno int
+  nome varchar(30)
+  sobrenome varchar(50)
+  data_nascimento date
+  id_endereco int(150)
+  cid_deficiencia varchar
+  tipo_deficiencia varchar
+  esp_deficiencia varchar
+  cpf varchar(11)
+  idade varchar
+}
+
+Table Mensalidade {
+  id_mensalidade int [primary key] 
+  id_matricula int
+  num_parcela int
+  vl_nominal decimal
+  dt_vencimento date
+  status_parcela varchar(20)
+  dt_criacao datetime
+}
+
+
+
+Ref user_posts: endereco.cep > aluno.id_endereco // many-to-one
+Ref: aluno.telefone > telefone.id_telefone
+Ref: aluno.id_matricula < tb_matricula.id_matricula
+Ref: aluno.id_aluno < tb_matricula.id_aluno
+Ref: professor.id_professor < turma.id_professor
+Ref: aluno.doencas_cid < doencas.doencas_cid
+Ref: professor.id_disciplina < turma.id_disciplina
+Ref: frequencia_alunos.id_aluno < tb_matricula.id_aluno
+Ref: tb_matricula.id_matricula < frequencia_alunos.id_matricula
+Ref: tb_atestados.id_aluno < frequencia_alunos.id_aluno
+Ref: tb_atestados.id_professor < Frequencia_professor.id_professor
+Ref: dados_funcionarios.id_funcionario < tb_frequencia_funcionarios.id_funcionario
+Ref: tb_frequencia_funcionarios.id_funcionario < tb_atestados.id_funcionario
+Ref: professor.id_professor < tb_atestados.id_professor
+Ref: tb_alunos_pcd.id_aluno < aluno.id_aluno
+Ref: aluno.cid_deficiencia < tb_alunos_pcd.cid_deficiencia
+Ref: tb_ferias_funcionarios.id_funcionario < dados_funcionarios.id_funcionario
+Ref: tb_ferias_funcionarios.id_professor < professor.id_professor
+
+Records aluno(id_matricula, nome, sobrenome) {
+}
+
+Records tb_matricula(id_matricula) {
+}
+
+Records endereco(cep, numero) {
+}
+
+
+Ref: "resposavel1"."cpf" < "aluno"."responsavel1"
+Ref: "tb_pagamentos"."data_pagamento" < tb_matricula."pagamento"
+Ref: "responsavel2"."telefone" < "aluno"."responsavel2"
+Ref: "responsavel2"."cpf_responsavel" < "aluno"."responsavel2"
+Ref: "sexo"."sexo_feminino" < "aluno"."sexo"
+Ref: "sexo"."sexo_masculino" < "resposavel1"."sexo"
+Ref: "sexo"."sexo_masculino" < "responsavel2"."sexo"
+Ref: "remedios"."cid" < "doencas"."nome_doenca"
+Ref: "Frequencia_professor"."id_diciplina" < "professor"."id_professor"
+Ref: "resposavel1"."cpf_responsavel" < "telefone"."pais"
+Ref: "responsavel2"."telefone" < "telefone"."numero"
+Ref: "professor"."tuno" < "Turno"."Manha"
+Ref: "aluno"."turno" < "Turno"."Manha"
+Ref: "tb_salarios"."id_salario" < "tb_pagamentos"."id_pagamento"
+Ref: "tb_salarios"."data_pagamento" < "tb_pagamentos"."id_matricula"
+Ref: "dados_funcionarios"."turno" < "Turno"."Tarde"
+Ref: "dados_funcionarios"."sexo" < "sexo"."sexo_masculino"
+Ref: "dados_funcionarios"."id_endereço" < "endereco"."cep"
+Ref: "dados_funcionarios"."telefone" < "telefone"."pais"
+Ref: "auditoria"."data_criaçao" < "aluno"."id_aluno"
+Ref: "Mensalidade"."id_mensalidade" < "tb_pagamentos"."id_pagamento"
+Ref: "professor"."id_disciplina" < "dados_funcionarios"."cargo_funcionario"
