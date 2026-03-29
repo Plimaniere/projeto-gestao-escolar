@@ -1,0 +1,249 @@
+
+Table tb_matricula {
+  id_matricula int [primary key]
+  id_aluno int [not null]
+  id_disciplina int [not null] 
+  status varchar [not null]
+  data_matricula date [not null]
+  turno varchar [not null]
+  nota decimal [not null]
+  pagamento int [not null]
+}
+
+Table tb_funcionarios {
+pk_cpf_funcionario char(11) [not null]
+id_funcionario integer [not null]
+cargo_funcionario int [not null]
+salario_funcionario int [not null]
+nome varchar (30) [not null]
+sobrenome varchar (50) [not null]
+data_nascimento date
+email varchar (100) [not null]
+turno int [not null]
+id_endereco int (150) [not null]
+telefone int [not null]
+sexo int
+}
+
+Table turma {
+id_disciplina integer [primary key]
+id_professor integer [not null]
+carga_horaria varchar [not null]
+nome_disciplina varchar [not null]
+cor_sala varchar [not null]
+}
+
+Table aluno {
+  id_matricula int [primary key]
+  id_aluno int [primary key]
+  nome varchar(30) [not null]
+  sobrenome varchar(50) [not null]
+  cpf varchar(11) [not null]
+  data_nascimento date [not null]
+  email varchar(100)
+  doencas_cid varchar 
+  raca int
+  peso varchar
+  cid_deficiencia varchar
+  id_endereco int(150) [not null]
+  telefone varchar(15) [not null]
+  sexo int [not null]
+  responsavel1 int [not null]
+  responsavel2 int [not null]
+}
+
+Table telefone {
+  id_telefone integer [primary key]
+  pais varchar [not null]
+  ddd int [not null]
+  numero varchar(10) [not null]
+  tipo varchar
+}
+
+Table doencas {
+doencas_cid varchar [not null]
+nome_doenca varchar(255) [not null]
+tipo_doenca varchar(100) [not null]
+especialidade_doenca varchar(50) [not null]
+vacinas varchar [not null]
+}
+
+Table endereco {
+  cep varchar [primary key, not null]
+  numero int [not null]
+  complemento varchar [not null]
+}
+
+Table frequencia_alunos {
+  id_aluno int [not null]
+  id_matricula int [not null]
+  id_disciplina int [not null]
+  presença varchar(50) [not null]
+}
+
+Table tb_financeiro {
+  id_creche bigint [primary key, not null]
+  descricao varchar (255) [not null]
+  data_recebimento date [not null]
+  valor numeric(10, 2) [not null]
+  status varchar(20) [not null]
+  salario_funcionario varchar [not null]
+  alimentacao_escolar varchar [not null]
+  material_escolar varchar [not null]
+  uniforme varchar [not null]
+  brinquedos varchar [not null]
+  reforma varchar [not null]
+  manutencao varchar [not null]
+}
+
+Table tb_salarios {
+  id_funcionario int [primary key, not null]
+  data_pagamento date [not null]
+  valor numeric(10, 2) [not null]
+}
+
+Table resposavel1 {
+ cpf_responsavel integer [primary key, not null]
+ telefone int [not null]
+ nome int [not null]
+ sobrenome int [not null]
+ sexo int [not null]
+ email varchar (255) [not null]
+ grau_parentesco int [not null]
+}
+
+Table responsavel2{
+  cpf_responsavel varchar (11) [primary key, not null]
+  telefone int [not null]
+  nome int [not null]
+  sobrenome int [not null]
+  sexo int
+  email varchar (255) [not null]
+  grau_parentesco int [not null]
+}
+
+Table sexo {
+  genero char
+}
+Table remedios {
+  id_remedio char(12) [not null]
+  cid int [not null]
+  horário_remedio datetime [not null]
+  fk_id_aluno integer [not null]
+}
+
+table tb_ferias_funcionarios {
+  id_funcionario int [not null]
+  data_inicio date [not null]
+  data_fim date [not null]
+  data_retorno date [not null]
+  abono_ferias decimal (10,2) [not null]
+  status status_ferias_enum [not null]
+}
+
+Enum status_ferias_enum {
+  Agendado
+  Cancelado
+  Em_Andamento
+}
+
+Table tb_frequencia_funcionarios{
+  cpf_funcionario varchar (11) [not null]
+  id_funcionario integer [primary key, not null]
+  cargo_funcionario int [not null]
+  turno_funcionario datetime [not null]
+  presença varchar(100) [not null]
+}
+
+Table tb_atestados {
+id_aluno int [not null]
+id_funcionario int [not null]
+data_entrega datetime [not null]
+data_inicio date [not null]
+data_fim date [not null]
+nome_medico char [not null]
+crm_medico char [not null]
+}
+
+Table auditoria {
+  data_criaçao date
+  ultima_atualização date
+}
+
+Table tb_alunos_pcd {
+  id_aluno int [not null]
+  nome varchar(30) [not null]
+  sobrenome varchar(50) [not null]
+  data_nascimento date [not null]
+  id_endereco int(150) [not null]
+  cid_deficiencia varchar [not null]
+  tipo_deficiencia varchar [not null]
+  esp_deficiencia varchar [not null]
+  cpf varchar(11) [not null]
+  idade varchar [not null]
+}
+
+Table tb_cargos {
+  id_professor int [not null]
+  id_diretor int [not null]
+  id_zelador int [not null]
+  id_cozinheiro int [not null]
+  id_seguranca int [not null]
+  id_enfermeira int [not null]
+  id_bibliotecario int [not null]
+  id_coordenador int [not null]
+}
+
+Ref user_posts: endereco.cep > aluno.id_endereco
+Ref: tb_cargos.id_professor < turma.id_professor
+Ref: aluno.telefone > telefone.id_telefone
+Ref: aluno.id_matricula < tb_matricula.id_matricula
+Ref: aluno.id_aluno < tb_matricula.id_aluno
+Ref: aluno.doencas_cid < doencas.doencas_cid
+Ref: frequencia_alunos.id_aluno < tb_matricula.id_aluno
+Ref: tb_matricula.id_matricula < frequencia_alunos.id_matricula
+Ref: tb_atestados.id_aluno < frequencia_alunos.id_aluno
+Ref: tb_funcionarios.id_funcionario < tb_frequencia_funcionarios.id_funcionario
+Ref: tb_frequencia_funcionarios.id_funcionario < tb_atestados.id_funcionario
+Ref: tb_alunos_pcd.id_aluno < aluno.id_aluno
+Ref: aluno.cid_deficiencia < tb_alunos_pcd.cid_deficiencia
+Ref: tb_ferias_funcionarios.id_funcionario < tb_funcionarios.id_funcionario
+Ref: tb_funcionarios.id_funcionario < tb_cargos.id_professor
+Ref: tb_funcionarios.id_funcionario < tb_cargos.id_diretor
+Ref: tb_funcionarios.id_funcionario < tb_cargos.id_zelador
+Ref: tb_funcionarios.id_funcionario < tb_cargos.id_cozinheiro
+Ref: tb_funcionarios.id_funcionario < tb_cargos.id_seguranca
+Ref: tb_funcionarios.id_funcionario < tb_cargos.id_enfermeira
+Ref: tb_matricula.id_disciplina < turma.id_disciplina
+Ref: tb_atestados.id_funcionario < tb_funcionarios.id_funcionario
+Ref: aluno.id_aluno < tb_atestados.id_aluno
+Ref: tb_funcionarios.pk_cpf_funcionario < tb_frequencia_funcionarios.cpf_funcionario
+Ref: tb_financeiro.salario_funcionario < tb_salarios.id_funcionario
+Ref: tb_funcionarios.id_funcionario < tb_salarios.id_funcionario
+Ref: tb_funcionarios.salario_funcionario < tb_financeiro.salario_funcionario
+
+
+
+Records aluno(id_matricula, nome, sobrenome) {
+}
+
+Records tb_matricula(id_matricula) {
+}
+
+Records endereco(cep, numero) {
+}
+
+
+Ref: "resposavel1"."cpf_responsavel" < "aluno"."responsavel1"
+Ref: "responsavel2"."telefone" < "aluno"."responsavel2"
+Ref: "responsavel2"."cpf_responsavel" < "aluno"."responsavel2"
+Ref: "sexo"."genero" < "aluno"."sexo"
+Ref: "sexo"."genero" < "resposavel1"."sexo"
+Ref: "sexo"."genero" < "responsavel2"."sexo"
+Ref: "remedios"."cid" < "doencas"."nome_doenca"
+Ref: "resposavel1"."cpf_responsavel" < "telefone"."pais"
+Ref: "responsavel2"."telefone" < "telefone"."numero"
+Ref: "tb_funcionarios"."sexo" < "sexo"."genero"
+Ref: "tb_funcionarios"."id_endereco" < "endereco"."cep"
+Ref: "tb_funcionarios"."telefone" < "telefone"."pais"
+Ref: "auditoria"."data_criaçao" < "aluno"."id_aluno"
